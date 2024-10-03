@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import EmpresaLogo from '../assets/logo.webp'
+// import EmpresaLogo from '../assets/logo.webp'
 import { AuthContext } from '../auth/AuthContext'
 
 export const Login = () => {
@@ -27,7 +27,7 @@ export const Login = () => {
     return (
         <main className="bg-gray-50 shadow-xl w-[600px] mt-8 grid justify-center gap-6 items-center mx-auto rounded-lg overflow-hidden">
             <section className='mt-6'>
-                <img src={EmpresaLogo} alt="Logo GR" className='overflow-hidden rounded-2xl shadow-md' />
+                {/* <img src={EmpresaLogo} alt="Logo GR" className='overflow-hidden rounded-2xl shadow-md' /> */}
             </section>
             {/*LOGIN FORM */}
             <form className="" onSubmit={(e) => handleLogin(e)}>

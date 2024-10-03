@@ -1,79 +1,69 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-export const AuthContext = createContext()
 
+export const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(null)
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const host = import.meta.env.VITE_HOST
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      setAuth(token)
-      getUserData(token);
-    } else {
-      setLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  const [auth, setAuth] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const getUserData = async (auth) => {
+  const host = import.meta.env.VITE_HOST;
+  const handleLoading = () =>{
+    setLoading(false)
+  }
+  const getUserData = async (authToken) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.get(`https://${host}/getUserData`, {
         headers: {
-          Authorization: `Bearer ${auth}`,
+          Authorization: `Bearer ${authToken}`,
           'ngrok-skip-browser-warning': 'true',
         },
       });
       setUser(response.data);
+      setLoading(false)
     } catch (error) {
       setUser(null);
       Cookies.remove("token");
-      return error
-    } finally {
+      console.error(error);
       setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
+
   const login = async (mail, password) => {
-    setLoading(true)
+    setLoading(true); // Solo aquí
     try {
-      const response = await axios.post(`https://${host}/login`, { mail, password })
-        .then((response) => {
-          console.log(response);
-          if (response.data) {
-            const { token } = response.data
-            Cookies.set('token', token, { expires: 7 })
-            setAuth(token)
-            getUserData(token)
-          }
-        })
-        .catch(
-          (error) => {
-            const msg = error.message == "Network Error" ? 'Hay problemas con el servidor' : 'Ocurrió un error'
-            return msg
-          }
-        )
-      return response
+      const response = await axios.post(`https://${host}/login`, { mail, password });
+      console.log(response);
+      if (response.data) {
+        const { token } = response.data;
+        Cookies.set('token', token, { expires: 7 });
+        setAuth(token);
+        await getUserData(token); // Asegúrate de que esto se ejecute antes de terminar el loading
+      }
+      return response;
     } catch (error) {
-      console.error(error)
-      return error
+      console.error(error);
+      const msg = error.message === "Network Error" ? 'Hay problemas con el servidor' : 'Ocurrió un error';
+      return msg;
+    } finally {
+      setLoading(false); // Aquí se cierra el loading
     }
-    finally {
-      setLoading(false)
-    }
-  }
+  };
+
   const logOut = () => {
-    Cookies.remove('token')
-    setAuth(null)
-    setUser(null)
-  }
+    Cookies.remove('token');
+    setAuth(null);
+    setUser(null);
+  };
+
   const updateUser = async (nombre, apellido, dni, mail, telefono) => {
-    setLoading(true)
+    setLoading(true); // Solo aquí
     try {
       const response = await axios.post(`https://${host}/perfil/actualizar`, {
         nombre, apellido, dni, mail, telefono
@@ -82,23 +72,23 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${auth}`,
           'ngrok-skip-browser-warning': 'true',
         },
-      })
-      setUser(response.data.user)
-      return response.data
+      });
+      setUser(response.data.user);
+      return response.data;
     } catch (error) {
-      console.error(error)
-      return { success: false, message: 'Error al actualizar' } // Return an error response
+      console.error(error);
+      return { success: false, message: 'Error al actualizar' }; // Return an error response
     } finally {
-      setLoading(false)
+      setLoading(false); // Aquí se cierra el loading
     }
-  }
+  };
 
   return (
     <AuthContext.Provider value={{
       auth, user, login, logOut, getUserData,
-      updateUser, loading, setLoading
+      updateUser, loading, setLoading, handleLoading
     }}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};

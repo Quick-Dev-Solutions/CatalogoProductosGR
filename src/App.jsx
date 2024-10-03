@@ -1,61 +1,45 @@
-import { NavBar } from "./components/NavBar";
-import { Inicio } from "./pages/Inicio";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./auth/PrivateRoute";
-import { Login } from "./pages/Login";
-import PublicRoute from "./auth/PublicRoute";
+
 import { AuthProvider } from "./auth/AuthContext";
-import { GestionProvider } from "./contexts/GestionContext";
+import PublicRoute from "./auth/PublicRoute";
+import PrivateRoute from "./auth/PrivateRoute";
+
+import { ProductosProvider } from "./contexts/ProductosContext";
+
+import { Login } from "./pages/Login";
+
+import { Header } from "./components/Header";
+import { ProductList } from "./components/ProductList";
+
 function App() {
   return (
     <AuthProvider>
-      <GestionProvider>
+      <ProductosProvider>
         <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <PublicRoute >
-                  <Login />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Inicio />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/ventas"
-              element={
-                <PrivateRoute>
-                  <Inicio />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/clientes"
-              element={
-                <PrivateRoute>
-                  <Inicio />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/proveedores"
-              element={
-                <PrivateRoute>
-                  <Inicio />
-                </PrivateRoute>
-              }
-            />
-          </Routes>
+          <Header />
+          <div className=" flex min-h-screen relative">
+            <Routes>
+
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute >
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <ProductList />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </div>
         </BrowserRouter>
-      </GestionProvider>
+      </ProductosProvider>
     </AuthProvider >
   );
 }
