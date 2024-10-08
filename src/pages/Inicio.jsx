@@ -1,8 +1,8 @@
-
+import Slider from "../components/views/Slider"
 export const Inicio = () => {
   return (
-    <div className=''>
-        <p>Hola</p>
+    <div className="flex flex-col">
+      <Slider />
     </div>
   )
 }

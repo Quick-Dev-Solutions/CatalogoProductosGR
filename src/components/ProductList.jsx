@@ -1,34 +1,44 @@
-import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { ProductosContext } from '../contexts/ProductosContext';
 import { AuthContext } from '../auth/AuthContext';
 import { ProductContainer } from './ProductContainer';
 import { CategoriesList } from './CategoriesList';
-import Slider from './views/Slider';
 
 export const ProductList = () => {
     const { loading, error } = useContext(AuthContext);
-    const { productosDisplay, total, pageSelected, cantPerPage, totalPages, setPageSelected, setCantPerPage, getProductosByCategory, getProductos, categorias, setCategorieSelected, categorieSelected,buscarPorPalabrasClave } = useContext(ProductosContext);
+    const { productosDisplay, total, pageSelected, cantPerPage, totalPages, setPageSelected, setCantPerPage, getProductosByCategory, getProductos, buscarPorPalabrasClave, getOfertas, categorias } = useContext(ProductosContext);
     const { categoryId, searchParams } = useParams();
+    const [categoriaEn, setCategoriaEn] = useState(null)
+    const location = useLocation()
+    let url = location.pathname
 
     useEffect(() => {
         const fetchProductos = async () => {
             try {
+                setCategoriaEn(null)
                 if (categoryId) {
-                    await getProductosByCategory(categoryId, pageSelected);
-                    setCategorieSelected(categorias?.find(categoria => categoria.id == categoryId) || {});
+                    // Si hay una categoría seleccionada, obtenemos los productos por categoría
+                    await getProductosByCategory(categoryId, 1);
+                    setCategoriaEn(categorias.filter(categoria =>categoria.id == categoryId)[0])
                 } else if (searchParams) {
+                    // Si hay una búsqueda, obtenemos los productos filtrados por búsqueda
                     await buscarPorPalabrasClave(searchParams);
+                } else if (url === '/ofertas') {
+                    // Si estamos en la página de ofertas, obtenemos las ofertas
+                    await getOfertas();
                 } else {
+                    // Si no hay categoría, búsqueda o estamos en ofertas, obtenemos todos los productos
                     await getProductos();
                 }
             } catch (error) {
                 console.error("Error al obtener productos:", error);
             }
         };
-    
+
         fetchProductos();
-    }, [categoryId, searchParams, pageSelected, cantPerPage]);
+    }, [categoryId, searchParams,cantPerPage, url]); // Asegúrate de incluir 'searchParams' y 'url' en las dependencias
+
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -54,72 +64,69 @@ export const ProductList = () => {
 
     if (productosDisplay && !loading) {
         return (
-            <div className="flex flex-col relative w-full">
-                <Slider />
-                <div className="main m-0 flex flex-row gap-12 w-full">
-                    <div className="categories w-fit">
-                        <CategoriesList />
+            <div className="main m-0 flex flex-row justify-between w-[80vw] mx-auto">
+                <div className="categories w-fit">
+                    {url != '/ofertas' && <CategoriesList />}
+                </div>
+                <div className="body flex flex-col items-center w-full">
+                    {categoriaEn && <div className="font-bold text-2xl uppercase">CATEGORÍA {categoriaEn.nombre}</div>}
+                    <div className="grid grid-flow-row gap-x-24 grid-cols-4 justify-start items-center">
+                        {productosDisplay.map(producto => (
+                            <ProductContainer key={producto.id} product={producto} />
+                        ))}
                     </div>
-                    <div className="body flex flex-col items-center w-full">
-                        {categorieSelected.length>0 && <div className="font-bold text-2xl uppercase">CATEGORÍA {categorieSelected.nombre}</div>}
-                        <div className="grid grid-flow-row gap-x-24 grid-cols-4 justify-start items-center">
-                            {productosDisplay.map(producto => (
-                                <ProductContainer key={producto.id} product={producto} />
-                            ))}
-                        </div>
-                        {productosDisplay.length > 0 && <div className="my-4">
-                            <label htmlFor="cantidadPorPag" className="mr-2">Productos por página:</label>
-                            <select
-                                id="cantidadPorPag"
-                                value={cantPerPage}
-                                onChange={handleCantidadChange}
-                                className="p-2 border"
-                            >
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>}
+                    {productosDisplay.length > 0 && url != '/ofertas' && <div className="my-4">
+                        <label htmlFor="cantidadPorPag" className="mr-2">Productos por página:</label>
+                        <select
+                            id="cantidadPorPag"
+                            value={cantPerPage}
+                            onChange={handleCantidadChange}
+                            className="p-2 border"
+                        >
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>}
 
-                        {productosDisplay.length > 0 && <div className="paginacion my-4 flex flex-row justify-between w-full">
-                            <p>{total} resultados</p>
-                            <nav aria-label="paginacion-label">
-                                <ul className="inline-flex -space-x-px text-sm">
-                                    <li>
+                    {productosDisplay.length > 0 && url != '/ofertas' && <div className="paginacion my-4 flex flex-row justify-between w-full">
+                        <p>{total} resultados</p>
+                        <nav aria-label="paginacion-label">
+                            <ul className="inline-flex -space-x-px text-sm">
+                                <li>
+                                    <button
+                                        onClick={() => handlePageChange(pageSelected - 1)}
+                                        className={`flex items-center justify-center px-3 h-8 ${pageSelected === 1 ? 'cursor-not-allowed text-gray-400' : 'text-gray-500'} bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700`}
+                                        disabled={pageSelected === 1}
+                                    >
+                                        {'<'}
+                                    </button>
+                                </li>
+
+                                {generarPaginas().map((page) => (
+                                    <li key={page}>
                                         <button
-                                            onClick={() => handlePageChange(pageSelected - 1)}
-                                            className={`flex items-center justify-center px-3 h-8 ${pageSelected === 1 ? 'cursor-not-allowed text-gray-400' : 'text-gray-500'} bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700`}
-                                            disabled={pageSelected === 1}
+                                            onClick={() => handlePageChange(page)}
+                                            className={`flex items-center justify-center px-3 h-8 leading-tight ${pageSelected === page ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'}`}
                                         >
-                                            {'<'}
+                                            {page}
                                         </button>
                                     </li>
+                                ))}
 
-                                    {generarPaginas().map((page) => (
-                                        <li key={page}>
-                                            <button
-                                                onClick={() => handlePageChange(page)}
-                                                className={`flex items-center justify-center px-3 h-8 leading-tight ${pageSelected === page ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'}`}
-                                            >
-                                                {page}
-                                            </button>
-                                        </li>
-                                    ))}
-
-                                    <li>
-                                        <button
-                                            onClick={() => handlePageChange(pageSelected + 1)}
-                                            className={`flex items-center justify-center px-3 h-8 ${pageSelected === totalPages ? 'cursor-not-allowed text-gray-400' : 'text-gray-500'} bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700`}
-                                            disabled={pageSelected === totalPages}
-                                        >
-                                            {'>'}
-                                        </button>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>}
-                        {productosDisplay.length <= 0 && <div className="h-full flex mt-40">NO SE HAN ENCONTRADO PRODUCTOS</div>}
-                    </div>
+                                <li>
+                                    <button
+                                        onClick={() => handlePageChange(pageSelected + 1)}
+                                        className={`flex items-center justify-center px-3 h-8 ${pageSelected === totalPages ? 'cursor-not-allowed text-gray-400' : 'text-gray-500'} bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700`}
+                                        disabled={pageSelected === totalPages}
+                                    >
+                                        {'>'}
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>}
+                    {productosDisplay.length <= 0 && <div className="h-full flex mt-40">NO SE HAN ENCONTRADO PRODUCTOS</div>}
                 </div>
             </div>
         );

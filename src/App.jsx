@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 //PROVIDERS
@@ -12,7 +13,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 import { Login } from "./pages/Login";
 import { Header } from "./components/Header";
 
-
+import { Inicio } from "./pages/Inicio";
 import { ProductList } from "./components/ProductList";
 import { ProductoDetalle } from "./components/ProductoDetalle";
 
@@ -32,8 +33,25 @@ function App() {
                   </PublicRoute>
                 }
               />
+
               <Route
                 path="/"
+                element={
+                  <PublicRoute>
+                    <Inicio />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/ofertas"
+                element={
+                  <PublicRoute>
+                    <ProductList />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/productos"
                 element={
                   <PublicRoute>
                     <ProductList />
@@ -49,7 +67,7 @@ function App() {
                 }
               />
               <Route
-                path="/producto/:id"
+                path="/producto/:idProducto"
                 element={
                   <PublicRoute>
                     <ProductoDetalle />

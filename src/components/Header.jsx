@@ -5,8 +5,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 
 export const Header = () => {
-    const {params} = useParams()
-    const [searchValue, setSearchValue] = useState(params? params:'')
+    const { params } = useParams()
+    const [searchValue, setSearchValue] = useState(params ? params : '')
     const navigate = useNavigate()
     const handleSearchInput = (e) => {
         setSearchValue(e.target.value);
@@ -14,39 +14,35 @@ export const Header = () => {
 
     const handleSearch = () => {
         if (searchValue.trim()) {
-          navigate(`/query/${encodeURIComponent(searchValue)}`);
+            navigate(`/query/${encodeURIComponent(searchValue)}`);
         }
-      };
+    };
     return (
         <div>
-            <header className="bg-orange-400 items-center grid grid-rows-2 max-h-[120px] py-4">
-                <div className="grid grid-cols-[auto_1fr_auto] items-center px-4 max-h-[100px]">
-                    <Link to='/'>
-                        <div className="logo flex mx-auto items-center pl-8 pr-16 max-h-[100px]">
-                            <img src={LogoBrand} alt="Imagen Logo GR Lllaves" className="w-16 max-h-[100px]" />
-                        </div>
-                    </Link>
-                    <div className="buscador flex ml-32 w-[800px] pl-16 max-h-[100px]">
-                        <form className="bg-gray-200 h-12 flex relative w-[800px] max-h-[100px] shadow-2xl" onSubmit={(e)=>e.preventDefault()} >
-                            <input
-                                type="text"
-                                placeholder="Buscar productos o marcas"
-                                className="bg-gray-200 text-black w-[800px] p-1 max-h-[100px]"
-                                onChange={handleSearchInput}
-                                value={searchValue}
-                            />
-                            <button className="text-black right-2 top-4 absolute max-h-[100px]" onClick={(e)=>handleSearch(e)}>
-                                <FaSearch />
+            <header className="bg-orange-400 items-center grid grid-rows-2 max-h-[95px] py-4">
+                <div className="grid grid-cols-[auto_1fr_auto] items-center max-h-[300px]">
+                    <div className="logo flex items-center mt-6 h-fit w-fit grid-rows-2">
+                        <Link to='/'>
+                            <img src={LogoBrand} alt="Imagen Logo GR Lllaves" className="w-24" />
+                        </Link>
+                    </div>
+                    <form className="max-w-md md:w-[800px] ml-32" onSubmit={handleSearch}>
+                        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div className="relative md:w-[800px]">
+                            <input type="search" id="default-search" className="block md:w-[800px] p-3 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
+                            focus:ring-orange-300" placeholder="Busca por productos, marcas y más..." required
+                                onChange={(e) => handleSearchInput(e)} />
+                            <button type="submit" className="text-white absolute right-2 bottom-2.5   focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-4 py-2"><svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
                             </button>
-                        </form>
-                    </div>
-                    <div className="logged text-end w-24 pr-4 max-h-[100px]">
+                        </div>
+                    </form>
+                    <Link to='/login' className="logged text-end w-fit pr-4 max-h-[100px]">
                         ¿Sos Empleado? Click acá
-                    </div>
+                    </Link>
                 </div>
-                <div className="max-h-[100px]">
-                    <Navbar />
-                </div>
+                <Navbar />
             </header>
         </div>
     );

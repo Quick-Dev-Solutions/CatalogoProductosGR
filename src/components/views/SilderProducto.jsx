@@ -17,8 +17,8 @@ export const SliderProducto = ({ images }) => {
     };
 
     return (
-        <div className="relative mx-auto" style={{ width: '500px' }}> 
-            <div className="relative overflow-hidden" style={{ height: '500px' }}>
+        <div className="relative mx-auto" style={{ width: '300px' }}> 
+            <div className="relative overflow-hidden" style={{ height: '300px' }}> {/* Ajuste del tamaño */}
                 <div
                     className="flex transition-transform ease-out duration-500"
                     style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -28,8 +28,8 @@ export const SliderProducto = ({ images }) => {
                             <img
                                 src={image}
                                 alt={`Slide ${index}`}
-                                className="w-full h-full object-cover" 
-                                style={{ width: '500px', height: '500px' }} 
+                                className="w-full h-full object-contain" 
+                                style={{ maxWidth: '300px', maxHeight: '300px' }} 
                             />
                             <div
                                 className="absolute top-0 left-0 w-full h-full"
@@ -40,7 +40,7 @@ export const SliderProducto = ({ images }) => {
             </div>
             <button
                 onClick={prevSlide}
-                className="absolute top-[220px] left-0 p-4 text-slate-400"
+                className="absolute left-0 p-4 top-[80px] text-slate-400"
             >
                 <img
                     src={RightArrow}
@@ -50,7 +50,7 @@ export const SliderProducto = ({ images }) => {
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute top-[220px] right-0 p-4"
+                className="absolute top-[80px] right-0 p-4"
             >
                 <img src={RightArrow} alt="Flecha a la derecha" className="size-12" />
             </button>

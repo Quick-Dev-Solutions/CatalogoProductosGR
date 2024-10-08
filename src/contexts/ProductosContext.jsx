@@ -17,9 +17,46 @@ export const ProductosProvider = ({ children }) => {
   const [cantPerPage, setCantPerPage] = useState(20); // Cantidad por defecto
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(null);
-  const [categorieSelected, setCategorieSelected] = useState({})
-  const { categoryId, searchParams } = useParams()
+  const { searchParams } = useParams()
   // Función para obtener productos, incluyendo la paginación
+  const getProductosDetalles = async (idProducto) => {
+    try {
+      const response = await axios.get(`https://${host}/api/getProductById/${idProducto}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        }
+      });
+      return response.data; // Devolver los datos correctamente
+    } catch (error) {
+      console.error(error);
+      return null; // Puedes manejar el error devolviendo un valor por defecto o null
+    }
+  };
+  
+
+  const getOfertas = async () => {
+    try {
+      let url = `https://${host}/api/getOfertas`;
+      const response = await axios.get(url, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        }
+      });
+
+      setLoading(false);
+      const respuestaInfo = response.data.data;
+      setTotal(respuestaInfo.length);
+      setProductosDisplay(respuestaInfo);
+      return response.data;
+    } catch (error) {
+      handleLoading();
+      console.error(error.message ? error.message : 'Ha habido un error al obtener los productos');
+      return error;
+    } finally {
+      handleLoading();
+    }
+  }
+
   const getProductos = async () => {
     try {
       let url = `https://${host}/api/getProducts2`;
@@ -85,6 +122,7 @@ export const ProductosProvider = ({ children }) => {
         page,
       });
 
+      handleLoading()
       const url = `https://${host}/api/getProductsByCategory?${params.toString()}`;
       const response = await axios.get(url, {
         headers: {
@@ -96,6 +134,7 @@ export const ProductosProvider = ({ children }) => {
       setTotalPages(response.data.data.lastPage); // Actualiza las páginas totales
       setTotal(response.data.data.total); // Actualiza el total de productos
       setPageSelected(response.data.data.page); // Actualiza la página seleccionada
+      handleLoading()
       return response.data;
 
     } catch (error) {
@@ -103,50 +142,45 @@ export const ProductosProvider = ({ children }) => {
       return error;
     }
   }
+
   const buscarPorPalabrasClave = async (params) => {
     try {
+      handleLoading()
       // Comienza construyendo la URL base
       let url = `https://${host}/api/search?query=${params}`;
-      
       // Agregar otros parámetros de búsqueda
       const parametros = [];
       if (cantPerPage) parametros.push(`perPage=${cantPerPage}`);
       if (pageSelected) parametros.push(`page=${pageSelected}`);
-  
+
       // Si hay parámetros adicionales, se añaden a la URL
       if (parametros.length > 0) {
         url += `&${parametros.join('&')}`; // Cambiar '?' por '&' para añadir parámetros adicionales
       }
-  
+
       // Realizar la solicitud
       const response = await axios.get(url, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
-  
+
       // Procesar la respuesta
+      handleLoading()
       const respuestaInfo = response.data.data;
-      console.log(respuestaInfo);
-      
       // Actualizar los estados según la respuesta
       setTotalPages(respuestaInfo.lastPage);
       setCantPerPage(respuestaInfo.perPage);
       setTotal(respuestaInfo.total);
       setPageSelected(respuestaInfo.page);
       setProductosDisplay(respuestaInfo.data); // Asegúrate de acceder correctamente a los datos
-  
+
       return response.data;
     } catch (error) {
       console.error(error);
       return error;
     }
   };
-  useEffect(() => {
-    if (categoryId) {
-      getProductosByCategory(categoryId); // Llama a la función para obtener productos por categoría
-    }
-  }, [categoryId]); // Solo se ejecuta cuando `categoryId` cambia
 
   // Llamar a las funciones al montar el componente
   useEffect(() => {
@@ -160,7 +194,7 @@ export const ProductosProvider = ({ children }) => {
       }
     }
     fetchData();
-  }, [categoryId]);
+  }, []);
 
   return (
     <ProductosContext.Provider value={{
@@ -170,8 +204,8 @@ export const ProductosProvider = ({ children }) => {
       errorMsg, total, totalPages,
       pageSelected, setPageSelected,
       cantPerPage, setCantPerPage,
-      categorieSelected, setCategorieSelected,
-      buscarPorPalabrasClave
+      buscarPorPalabrasClave, getOfertas,
+      getProductosDetalles
     }}>
       {children}
     </ProductosContext.Provider>

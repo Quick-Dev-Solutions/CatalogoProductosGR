@@ -1,14 +1,15 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 
 export const ProductContainer = ({ product }) => {
-    const { id, descripcion, id_categoria, images, nombre } = product;
+    const { id, images, nombre } = product;
     return (
         <Link to={`/producto/${id}`}>
-            <div className="w-48  p-4 rounded-sm flex flex-col    col-span-1 transition-all hover:scale-110 hover:underline">
-                <div className="image-stock row-span-1 shadow-lg h-[260px] w-[260px] pb-6 items-center ">
+            <div className="w-48  p-4 rounded-sm flex flex-col    col-span-1 transition-all hover:text-blue-600 hover:underline">
+                <div className="image-stock row-span-1 shadow-lg h-[260px] w-[260px] pb-6 items-center aspect-square">
                     <img
                         src={images[0]}
-                        className="size-fit object-fit h-64 w-64 aspect-square"
+                        className="object-contain object-center h-full w-full"
                         alt={nombre}
                     />
                 </div>
