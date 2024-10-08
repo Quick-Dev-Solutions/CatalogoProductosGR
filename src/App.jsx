@@ -1,15 +1,21 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+//PROVIDERS
 import { AuthProvider } from "./auth/AuthContext";
+import { ProductosProvider } from "./contexts/ProductosContext";
+
+//METODOS PARA VERIFICAR RUTAS
 import PublicRoute from "./auth/PublicRoute";
 import PrivateRoute from "./auth/PrivateRoute";
 
-import { ProductosProvider } from "./contexts/ProductosContext";
-
+// MENUS
 import { Login } from "./pages/Login";
-
 import { Header } from "./components/Header";
+
+
 import { ProductList } from "./components/ProductList";
+import { ProductoDetalle } from "./components/ProductoDetalle";
+
 
 function App() {
   return (
@@ -17,9 +23,7 @@ function App() {
       <ProductosProvider>
         <BrowserRouter>
           <Header />
-          <div className=" flex min-h-screen relative">
             <Routes>
-
               <Route
                 path="/login"
                 element={
@@ -31,13 +35,45 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <PrivateRoute>
+                  <PublicRoute>
                     <ProductList />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/query/:searchParams"
+                element={
+                  <PublicRoute>
+                    <ProductList />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/producto/:id"
+                element={
+                  <PublicRoute>
+                    <ProductoDetalle />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/categoria/:categoryId"
+                element={
+                  <PublicRoute>
+                    <ProductList />
+                  </PublicRoute>
+                }
+              />
+              {/*CREACIÓN DE PRODUCTO */}
+              <Route
+                path="/crearProductos"
+                element={
+                  <PrivateRoute>
+                    <ProductoDetalle />
                   </PrivateRoute>
                 }
               />
             </Routes>
-          </div>
         </BrowserRouter>
       </ProductosProvider>
     </AuthProvider >

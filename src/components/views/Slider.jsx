@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import RightArrow from '../assets/right-arrow.svg'
+import RightArrow from '../../assets/right-arrow.svg'
 const images = [
     'https://via.placeholder.com/800x400',
     'https://via.placeholder.com/800x400/ff6347',
@@ -22,7 +22,7 @@ export const Slider = () => {
     };
 
     return (
-        <div className="relative mx-auto bg-gradient-to-b from-orange-400 to-white">
+        <div className="relative mx-auto bg-gradient-to-b from-orange-400 to-white w-full">
             <div className="overflow-hidden relative h-64">
                 <div
                     className="flex transition-transform ease-out duration-500"
