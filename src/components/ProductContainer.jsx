@@ -8,7 +8,7 @@ export const ProductContainer = ({ product }) => {
                 <div className="image-stock row-span-1 shadow-lg h-[260px] w-[260px] pb-6 items-center ">
                     <img
                         src={images[0]}
-                        className="size-fit object-fit h-64 w-64"
+                        className="size-fit object-fit h-64 w-64 aspect-square"
                         alt={nombre}
                     />
                 </div>

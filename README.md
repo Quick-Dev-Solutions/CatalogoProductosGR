@@ -1,31 +1,28 @@
-# Sistema de Gestión de Clientes y Proveedores
+# Sistema de Catálogo de Productos para GR LLaves
 
 ## Descripción del Proyecto
 
-El sistema web propuesto automatiza el proceso de manejo de clientes y proveedores, así como la administración de pagos y comisiones para empleados. Este sistema simplificará la verificación de pagos, permitirá una gestión eficiente de las comisiones y mejorará la visibilidad y trazabilidad de las transacciones.
+El sistema web propuesto automatiza el proceso de búsqueda de productos para los clientes, así como la gestión de productos y categorías desde el lado de los empleados. Este sistema permite una gestión eficiente de la vista de productos y mejora la visibilidad de los mismos.
 
 ## Funcionalidades Principales
 
-### 1. Gestión de Clientes y Proveedores
-- **Registro y Actualización**: Alta y modificación de datos de clientes y proveedores.
-- **Visualización**: Listado y búsqueda de clientes y proveedores.
-- **Historial de Transacciones**: Registro de todas las transacciones realizadas con cada cliente y proveedor.
+### 1. Filtro por categorías
+- **Visualización**: Listado y búsqueda de productos por categorías.
 
-### 2. Manejo de Comisiones a Empleados
-- **Registro de Ventas**: Los empleados pueden registrar ventas con detalles como cliente, monto y fecha.
-- **Cálculo Automático**: Cálculo automático de comisión a empleados.
-- **Subida de Comprobantes**: Permite a los empleados subir fotos de los comprobantes de transacción.
-- **Verificación de Pagos**: El supervisor verifica las fotos de los comprobantes y confirma las transacciones.
-- **Generación de Reportes**: Reportes sobre comisiones pagadas, pendientes y otros detalles relevantes.
+### 2. Manejo de búsquedas inteligentes
+- **Búsqueda por medio de palabras clave**: Los clientes pueden buscar productos por palabras clave.
+- **Filtro por cantidad**: Los clientes podrán ver en su totalidad o menor medida los productos que cumplan con sus parámetros de búsqueda. 
 
-### 3. Automatización del Proceso
-- **Notificaciones**: Notificaciones automáticas a supervisores y empleados sobre el estado de las transacciones y verificación.
-- **Verificación Automática**: Comparación automática de datos ingresados con los comprobantes subidos.
+### 3. Ofertas
+- **Del lado del cliente**: Se encuentran con un Slider en la página principal el cuál les permite a los clientes visualizar las ofertas actuales.
+- **Del lado del empleado**: Les permite a los empleados, registrar, actualizar o borrar ofertas.
 
 ### 4. Extensibilidad
-- **Módulos Adicionales**: Posibilidad de añadir módulos adicionales como gestión de inventario, análisis de ventas y otros según necesidades futuras.
+- **Módulos Adicionales**: Posibilidad de añadir módulos adicionales como gestión de inventario, sistema de ventas y otros según necesidades futuras.
 
 ## Módulo de Control de Empleados
+> [!WARNING]
+> No está realizado todavía
 
 ### Descripción General
 Este módulo está diseñado para gestionar el acceso al sistema y controlar las actividades de los empleados. Permite a los empleados iniciar sesión de manera segura con credenciales individuales y proporciona una visión integral del uso del sistema por parte de cada usuario. Esto facilita la administración, supervisión y auditoría de las acciones realizadas dentro del sistema.
