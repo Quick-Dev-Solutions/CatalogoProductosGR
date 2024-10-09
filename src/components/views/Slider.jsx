@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import RightArrow from '../../assets/right-arrow.svg'
+import RightArrow from '../../assets/right-arrow.svg';
+
 const images = [
-    'https://via.placeholder.com/800x400',
-    'https://via.placeholder.com/800x400/ff6347',
-    'https://via.placeholder.com/800x400/4682b4',
+    'https://http2.mlstatic.com/D_NQ_NP_905031-MLA74952578559_032024-OO.webp',
+    'https://http2.mlstatic.com/D_NQ_NP_695288-MLA74952522705_032024-OO.webp',
+    'https://http2.mlstatic.com/D_NQ_NP_738242-MLA74982791947_032024-OO.webp'
 ];
 
 export const Slider = () => {
@@ -22,17 +23,23 @@ export const Slider = () => {
     };
 
     return (
-        <div className="relative mx-auto bg-gradient-to-b from-orange-400 to-white w-full">
-            <div className="overflow-hidden relative h-64">
+        <div className="relative mx-auto
+         bg-gradient-to-b from-orange-400 to-white w-full
+         ">
+            <div className="overflow-hidden relative h-[250px] w-[500px] mx-auto">
                 <div
                     className="flex transition-transform ease-out duration-500"
                     style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                 >
                     {images.map((image, index) => (
-                        <div className="min-w-full relative" key={index}>
-                            <img src={image} alt={`Slide ${index}`} className="w-full h-64 object-cover" />
+                        <div className="min-w-full relative h-full" key={index}>
+                            <img 
+                                src={image} 
+                                alt={`Slide ${index}`} 
+                                className="w-full h-full object-contain" // Cambiado a object-contain
+                            />
                             <div
-                                className={`absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-white `}
+                                className={`absolute top-0 left-0 w-full h-full `}
                             ></div>
                         </div>
                     ))}
@@ -40,20 +47,21 @@ export const Slider = () => {
             </div>
             <button
                 onClick={prevSlide}
-                className="absolute top-16 left-0 p-4 disable:text-slate-100 text-slate-400 fill-slate-400"
-                disabled={currentIndex  === 0}
-                >
-                <img src={RightArrow} alt="Flecha a la derecha"
-                 className='size-12 transfrm rotate-180 fill-slate-400'
-                 disabled={currentIndex  === 0}
-                  />
+                className="absolute top-1/2 left-0 p-4 text-slate-400 transform -translate-y-1/2"
+                disabled={currentIndex === 0}
+            >
+                <img 
+                    src={RightArrow} 
+                    alt="Flecha a la izquierda"
+                    className='size-12 transform rotate-180'
+                />
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute top-16 right-0 p-4 disabled:cursor-not-allowed`"
+                className="absolute top-1/2 right-0 p-4 transform -translate-y-1/2"
                 disabled={currentIndex + 1 === images.length}
             >
-                <img src={RightArrow} alt="Flecha a la derecha" className={`size-12 `} />
+                <img src={RightArrow} alt="Flecha a la derecha" className={`size-12`} />
             </button>
         </div>
     );

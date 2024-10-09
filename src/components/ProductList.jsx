@@ -16,6 +16,7 @@ export const ProductList = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
+                
                 setCategoriaEn(null)
                 if (categoryId) {
                     // Si hay una categoría seleccionada, obtenemos los productos por categoría
@@ -65,6 +66,9 @@ export const ProductList = () => {
     if (productosDisplay && !loading) {
         return (
             <div className="main m-0 flex flex-row justify-between w-[80vw] mx-auto">
+                <meta name="description" 
+                content={`Encontrá ${location.pathname=='/ofertas'? 'nuestras ofertas en GR Llaves, comprá la mejor calidad al mejor precio. Tu seguridad, en nuestras manos..': 'nuestra variedad de productos de GR Llaves, representantes de SOMET, BBS Motion, compras mayoristas y más. Tu seguridad, en nuestras manos...'}`} 
+                />
                 <div className="categories w-fit">
                     {url != '/ofertas' && <CategoriesList />}
                 </div>

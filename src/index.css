@@ -25,3 +25,13 @@ body {
   scrollbar-width: thin; /* Barra delgada */
   scrollbar-color: orange #f1f1f1; /* Thumb naranja y riel claro */
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Hace que el contenedor ocupe toda la pantalla */
+}
+
+.main-content {
+  flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio restante */
+}

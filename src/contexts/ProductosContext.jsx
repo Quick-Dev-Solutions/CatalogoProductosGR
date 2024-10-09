@@ -7,7 +7,7 @@ export const ProductosContext = createContext()
 
 // eslint-disable-next-line react/prop-types
 export const ProductosProvider = ({ children }) => {
-  const { handleLoading, setLoading } = useContext(AuthContext);
+  const { handleLoading } = useContext(AuthContext);
   const host = import.meta.env.VITE_HOST;
 
   const [productosDisplay, setProductosDisplay] = useState(null);
@@ -21,21 +21,24 @@ export const ProductosProvider = ({ children }) => {
   // Función para obtener productos, incluyendo la paginación
   const getProductosDetalles = async (idProducto) => {
     try {
+      handleLoading()
       const response = await axios.get(`https://${host}/api/getProductById/${idProducto}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
+      handleLoading()
       return response.data; // Devolver los datos correctamente
     } catch (error) {
       console.error(error);
       return null; // Puedes manejar el error devolviendo un valor por defecto o null
     }
   };
-  
+
 
   const getOfertas = async () => {
     try {
+      handleLoading()
       let url = `https://${host}/api/getOfertas`;
       const response = await axios.get(url, {
         headers: {
@@ -43,10 +46,10 @@ export const ProductosProvider = ({ children }) => {
         }
       });
 
-      setLoading(false);
       const respuestaInfo = response.data.data;
       setTotal(respuestaInfo.length);
       setProductosDisplay(respuestaInfo);
+      handleLoading()
       return response.data;
     } catch (error) {
       handleLoading();
@@ -59,6 +62,7 @@ export const ProductosProvider = ({ children }) => {
 
   const getProductos = async () => {
     try {
+      handleLoading()
       let url = `https://${host}/api/getProducts2`;
       const params = [];
 
@@ -74,14 +78,13 @@ export const ProductosProvider = ({ children }) => {
         }
       });
 
-      setLoading(false);
       const respuestaInfo = response.data.data;
       setTotalPages(respuestaInfo.lastPage);
       setCantPerPage(respuestaInfo.perPage);
       setTotal(respuestaInfo.total);
       setPageSelected(respuestaInfo.page);
       setProductosDisplay(response.data.data.data);
-
+      handleLoading()
       return response.data;
 
     } catch (error) {
@@ -96,13 +99,14 @@ export const ProductosProvider = ({ children }) => {
   // Función para obtener las categorías
   const getCategories = async () => {
     try {
+      handleLoading()
       const response = await axios.get(`https://${host}/api/getCategories`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
-      handleLoading();
       setCategorias(response.data.data);
+      handleLoading()
       return response.data;
     } catch (error) {
       console.error(error.message ? error.message : 'Ha habido un error al obtener las categorías');
@@ -116,13 +120,13 @@ export const ProductosProvider = ({ children }) => {
   // Función para obtener productos por categoría
   const getProductosByCategory = async (categoryId, page = 1) => {
     try {
+      handleLoading()
       const params = new URLSearchParams({
         categoryId,
         perPage: cantPerPage, // O puedes establecer otro valor
         page,
       });
 
-      handleLoading()
       const url = `https://${host}/api/getProductsByCategory?${params.toString()}`;
       const response = await axios.get(url, {
         headers: {

@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import {ScrollToTop} from './components/views/ScrollToTop'
 //PROVIDERS
 import { AuthProvider } from "./auth/AuthContext";
 import { ProductosProvider } from "./contexts/ProductosContext";
@@ -11,11 +11,12 @@ import PrivateRoute from "./auth/PrivateRoute";
 
 // MENUS
 import { Login } from "./pages/Login";
-import { Header } from "./components/Header";
+import { Header } from "./components/evershown/Header";
 
 import { Inicio } from "./pages/Inicio";
 import { ProductList } from "./components/ProductList";
 import { ProductoDetalle } from "./components/ProductoDetalle";
+import { Footer } from "./components/evershown/Footer";
 
 
 function App() {
@@ -23,75 +24,82 @@ function App() {
     <AuthProvider>
       <ProductosProvider>
         <BrowserRouter>
-          <Header />
-            <Routes>
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute >
-                    <Login />
-                  </PublicRoute>
-                }
-              />
+          <div className="app-container ">
+            <ScrollToTop/>
+            <Header />
+            <div className="main-content">
 
-              <Route
-                path="/"
-                element={
-                  <PublicRoute>
-                    <Inicio />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/ofertas"
-                element={
-                  <PublicRoute>
-                    <ProductList />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/productos"
-                element={
-                  <PublicRoute>
-                    <ProductList />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/query/:searchParams"
-                element={
-                  <PublicRoute>
-                    <ProductList />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/producto/:idProducto"
-                element={
-                  <PublicRoute>
-                    <ProductoDetalle />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/categoria/:categoryId"
-                element={
-                  <PublicRoute>
-                    <ProductList />
-                  </PublicRoute>
-                }
-              />
-              {/*CREACIÓN DE PRODUCTO */}
-              <Route
-                path="/crearProductos"
-                element={
-                  <PrivateRoute>
-                    <ProductoDetalle />
-                  </PrivateRoute>
-                }
-              />
-            </Routes>
+              <Routes>
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute >
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
+
+                <Route
+                  path="/"
+                  element={
+                    <PublicRoute>
+                      <Inicio />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/ofertas"
+                  element={
+                    <PublicRoute>
+                      <ProductList />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/productos"
+                  element={
+                    <PublicRoute>
+                      <ProductList />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/query/:searchParams"
+                  element={
+                    <PublicRoute>
+                      <ProductList />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/producto/:idProducto"
+                  element={
+                    <PublicRoute>
+                      <ProductoDetalle />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/categoria/:categoryId"
+                  element={
+                    <PublicRoute>
+                      <ProductList />
+                    </PublicRoute>
+                  }
+                />
+                {/*CREACIÓN DE PRODUCTO */}
+                <Route
+                  path="/crearProductos"
+                  element={
+                    <PrivateRoute>
+                      <ProductoDetalle />
+                    </PrivateRoute>
+                  }
+                />
+              </Routes>
+            </div>
+            <Footer />
+          </div>
         </BrowserRouter>
       </ProductosProvider>
     </AuthProvider >
