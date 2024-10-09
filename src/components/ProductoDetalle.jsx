@@ -19,13 +19,13 @@ export const ProductoDetalle = () => {
     console.log(producto);
     if (!producto) return;
     return (
-        <div className="bg-white flex flex-row w-full justify-center items-center h-[70vh] gap-24">
+        <div className="bg-white flex flex-row w-full size-full justify-center items-center my-2 h-[70vh] gap-24">
             <div className="galeria max-w-[400px]"> {/* Ajusta el contenedor de la imagen */}
                 <SliderProducto images={producto.images ? producto.images : []} />
             </div>
             <div className="infoprod h-full flex items-center justify-center flex-col gap-3 max-w-[560px]">
                 <h3 className="font-bold">{producto.nombre}</h3>
-                {producto.descripcion && <div
+                {producto.descripcion && <div className="max-h-[80vh] overflow-y-auto"
                     dangerouslySetInnerHTML={{ __html: producto.descripcion }}
                 />}
                 {!producto.descripcion && 

@@ -35,3 +35,17 @@ body {
 .main-content {
   flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio restante */
 }
+.half-blur {
+  position: relative;
+}
+
+.half-blur::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  backdrop-filter: blur(305px); /* Ajusta el nivel de desenfoque */
+}
+

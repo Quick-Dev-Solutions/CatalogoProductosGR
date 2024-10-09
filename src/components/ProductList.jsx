@@ -65,7 +65,7 @@ export const ProductList = () => {
 
     if (productosDisplay && !loading) {
         return (
-            <div className="main m-0 flex flex-row justify-between w-[80vw] mx-auto">
+            <div className="main m-0 flex flex-row justify-between w-64 md:w-[80vw] md:mx-auto">
                 <meta name="description" 
                 content={`Encontrá ${location.pathname=='/ofertas'? 'nuestras ofertas en GR Llaves, comprá la mejor calidad al mejor precio. Tu seguridad, en nuestras manos..': 'nuestra variedad de productos de GR Llaves, representantes de SOMET, BBS Motion, compras mayoristas y más. Tu seguridad, en nuestras manos...'}`} 
                 />
@@ -74,7 +74,7 @@ export const ProductList = () => {
                 </div>
                 <div className="body flex flex-col items-center w-full">
                     {categoriaEn && <div className="font-bold text-2xl uppercase">CATEGORÍA {categoriaEn.nombre}</div>}
-                    <div className="grid grid-flow-row gap-x-24 grid-cols-4 justify-start items-center">
+                    <div className="grid grid-flow-row gap-x-32 md:gap-x-24  grid-cols-2 md:grid-cols-4 justify-center items-center">
                         {productosDisplay.map(producto => (
                             <ProductContainer key={producto.id} product={producto} />
                         ))}
