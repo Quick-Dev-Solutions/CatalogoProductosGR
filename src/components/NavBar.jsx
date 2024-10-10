@@ -24,8 +24,8 @@ export const Navbar = () => {
                         Categorías de productos
                         <img src={ArrowDown} alt={`Flecha ${productsMenu ? 'arriba' : 'abajo'}`} className={`size-4 ${productsMenu ? 'rotate-180' : ''} transition-transform`} />
                         <ul className={`${productsMenu ? 'block' : 'hidden'} bg-white rounded-md absolute z-10 flex flex-col top-6 border border-Almost-transparent-black shadow-lg gap-3 overflow-y-auto max-h-[70vh]`}>
-                            {categorias.length > 0 && categorias.map((categoria) => (
-                                <li key={categoria.id} className={`hover:bg-slate-200 py-2 uppercase px-5 transition-colors ${categoryId == categoria.id ? 'bg-blue-300 hover:bg-blue-400' : ''}`}>
+                            {categorias.length > 0 && categorias.map((categoria, index) => (
+                                <li key={index} className={`hover:bg-slate-200 py-2 uppercase px-5 transition-colors ${categoryId == categoria.id ? 'bg-blue-300 hover:bg-blue-400' : ''}`}>
                                     <Link to={`/categoria/${categoria.id}`}>{categoria.nombre}</Link>
                                 </li>
                             ))}
@@ -43,7 +43,7 @@ export const Navbar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to='/productos'>
+                    <Link to='/nosotros'>
                         Nosotros
                     </Link>
                 </li>

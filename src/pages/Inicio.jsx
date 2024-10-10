@@ -23,8 +23,8 @@ export const Inicio = () => {
   }, [])
 
   return (
-    <div className="flex mt-4 flex-row md:flex-col">
-      <div className="ofertas-slider justify-between items-center md:mx-4 md:mb-12 flex flex-col md:flex-row">
+    <div className="md:flex md:mt-4  md:flex-col">
+      <div className="ofertas-slider md:justify-between items-center md:mx-4 md:mb-12 flex flex-col md:flex-row">
         <section className="ofertas md:ml-4 md:h-[50vh] select-none">
           <div className="info-ofertas flex items-center gap-4">
             <h2 className="font-bold text-xl ">Conocé nuestras ofertas</h2>

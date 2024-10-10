@@ -16,7 +16,6 @@ export const ProductoDetalle = () => {
         fetchProducto();
     }, [idProducto]); // Incluye getProductosDetalles como dependencia
 
-    console.log(producto);
     if (!producto) return;
     return (
         <div className="bg-white flex flex-row w-full size-full justify-center items-center my-2 h-[70vh] gap-24">

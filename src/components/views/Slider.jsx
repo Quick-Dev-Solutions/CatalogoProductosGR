@@ -23,8 +23,8 @@ export const Slider = () => {
     };
 
     return (
-        <div className="relative mx-auto
-         bg-gradient-to-b from-orange-400 to-white w-full
+        <div className="relative
+         bg-gradient-to-b from-orange-400 md:mx-auto to-white w-[80vw] sm:w-full
          ">
             <div className="overflow-hidden relative h-[250px] w-[500px] mx-auto">
                 <div

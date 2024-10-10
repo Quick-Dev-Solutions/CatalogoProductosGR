@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {ScrollToTop} from './components/views/ScrollToTop'
+// import {ScrollToTop} from './components/views/ScrollToTop'
 //PROVIDERS
 import { AuthProvider } from "./auth/AuthContext";
 import { ProductosProvider } from "./contexts/ProductosContext";
@@ -21,11 +21,11 @@ import { Footer } from "./components/evershown/Footer";
 
 function App() {
   return (
-    <AuthProvider>
-      <ProductosProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <ProductosProvider>
           <div className="app-container ">
-            <ScrollToTop/>
+            {/* <ScrollToTop/> */}
             <Header />
             <div className="main-content">
 
@@ -100,9 +100,9 @@ function App() {
             </div>
             <Footer />
           </div>
-        </BrowserRouter>
-      </ProductosProvider>
-    </AuthProvider >
+        </ProductosProvider>
+      </AuthProvider >
+    </BrowserRouter>
   );
 }
 

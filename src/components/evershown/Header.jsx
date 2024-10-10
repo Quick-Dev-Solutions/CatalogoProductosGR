@@ -1,32 +1,35 @@
 import { Navbar } from "../Navbar";
 import LogoBrand from '../../assets/brand/logo.webp';
-import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { ProductosContext } from "../../contexts/ProductosContext";
 
 export const Header = () => {
-    const location = useLocation()
-    const { params } = useParams()
-    const [searchValue, setSearchValue] = useState(params ? params : '')
+    const {searchParams, setSearchParams} = useContext(ProductosContext)
+    const [searchValue, setSearchValue] = useState(searchParams.get('query') || '')
     const navigate = useNavigate()
     const handleSearchInput = (e) => {
         setSearchValue(e.target.value);
     };
 
-    const handleSearch = () => {
+    const handleSearch = (e) => {
+        e.preventDefault()
         if (searchValue.trim()) {
-            navigate(`/query/${encodeURIComponent(searchValue)}`);
+            const palabrasClave = encodeURIComponent(searchValue)
+            setSearchParams({query: palabrasClave})
+            navigate(`/productos/?query=${palabrasClave}`)
         }
     };
     if(location.pathname == '/login') {return} 
     return (
-            <header className="bg-orange-400 items-center grid grid-rows-2 px-32 max-h-[95px] py-4">
-                <div className="grid grid-cols-[auto_1fr_auto] items-center max-h-[300px]">
-                    <div className="logo flex items-center mt-6 grid-rows-2">
+            <header className="bg-orange-400 w-[100vw] items-center md:grid flex md:grid-rows-2 md:px-32 max-h-[95px] md:py-4 shadow-2xl">
+                <div className="md:grid flex justify-between border border-red-500 md:grid-cols-[auto_1fr_auto] md:items-center md:max-h-[300px]">
+                    <div className="logo md:static md:items-center md:mt-6 md:grid-rows-2">
                         <Link to='/'>
                             <img src={LogoBrand} alt="Imagen Logo GR Lllaves" className="w-24" />
                         </Link>
                     </div>
-                    <form className="max-w-md md:w-[600px] ml-2 mr-64" onSubmit={handleSearch}>
+                    <form className="max-w-md md:w-[600px] ml-2 mr-64" onSubmit={(e)=>handleSearch(e)}>
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div className="relative md:w-[600px]">
                             <input type="search" id="default-search" className="block md:w-[600px] p-3 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
@@ -38,7 +41,7 @@ export const Header = () => {
                             </button>
                         </div>
                     </form>
-                    <h2 className=" font-semibold text-lg text-end pr-8 max-h-[100px]">
+                    <h2 className="hidden md:block font-semibold text-lg text-end pr-8 max-h-[100px]">
                         Tu seguridad, en nuestras manos..
                     </h2>
                 </div>

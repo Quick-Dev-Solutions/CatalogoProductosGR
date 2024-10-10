@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
+// import axios from "axios";
+// import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
 
@@ -8,13 +8,10 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const host = import.meta.env.VITE_HOST;
-  const handleLoading = () =>{
-    setLoading(false)
-  }
-  const getUserData = async (authToken) => {
+
+/*  const getUserData = async (authToken) => {
     try {
       setLoading(true);
       const response = await axios.get(`https://${host}/getUserData`, {
@@ -82,11 +79,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(false); // Aquí se cierra el loading
     }
   };
-
+*/
   return (
     <AuthContext.Provider value={{
-      auth, user, login, logOut, getUserData,
-      updateUser, loading, setLoading, handleLoading
+      loading, setLoading
     }}>
       {children}
     </AuthContext.Provider>

@@ -1,33 +1,30 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { AuthContext } from "../auth/AuthContext";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export const ProductosContext = createContext()
 
 // eslint-disable-next-line react/prop-types
 export const ProductosProvider = ({ children }) => {
-  const { handleLoading } = useContext(AuthContext);
+  const { setLoading } = useContext(AuthContext);
   const host = import.meta.env.VITE_HOST;
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [productosDisplay, setProductosDisplay] = useState(null);
   const [categorias, setCategorias] = useState(null);
   const [errorMsg, setError] = useState(null);
-  const [pageSelected, setPageSelected] = useState(1); // Página por defecto
-  const [cantPerPage, setCantPerPage] = useState(20); // Cantidad por defecto
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(null);
-  const { searchParams } = useParams()
-  // Función para obtener productos, incluyendo la paginación
+  const pageSelected = searchParams.get('page') || 1
+  const cantPerPage = useState(searchParams.get('cantPerPage')? searchParams.get('cantPerPage') : 20)
   const getProductosDetalles = async (idProducto) => {
     try {
-      handleLoading()
       const response = await axios.get(`https://${host}/api/getProductById/${idProducto}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
-      handleLoading()
       return response.data; // Devolver los datos correctamente
     } catch (error) {
       console.error(error);
@@ -38,7 +35,6 @@ export const ProductosProvider = ({ children }) => {
 
   const getOfertas = async () => {
     try {
-      handleLoading()
       let url = `https://${host}/api/getOfertas`;
       const response = await axios.get(url, {
         headers: {
@@ -49,78 +45,60 @@ export const ProductosProvider = ({ children }) => {
       const respuestaInfo = response.data.data;
       setTotal(respuestaInfo.length);
       setProductosDisplay(respuestaInfo);
-      handleLoading()
       return response.data;
     } catch (error) {
-      handleLoading();
       console.error(error.message ? error.message : 'Ha habido un error al obtener los productos');
       return error;
-    } finally {
-      handleLoading();
     }
   }
 
   const getProductos = async () => {
     try {
-      handleLoading()
       let url = `https://${host}/api/getProducts2`;
       const params = [];
-
+      const cantPerPage = searchParams.get('cantPerPage') || 20
+      const page = searchParams.get('page') || 1
       if (cantPerPage) params.push(`perPage=${cantPerPage}`);
-      if (pageSelected) params.push(`page=${pageSelected}`);
-
+      if (page) params.push(`page=${page}`);
+      
       if (params.length > 0) {
         url += `?${params.join('&')}`;
       }
+
       const response = await axios.get(url, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
-
+      
       const respuestaInfo = response.data.data;
       setTotalPages(respuestaInfo.lastPage);
-      setCantPerPage(respuestaInfo.perPage);
       setTotal(respuestaInfo.total);
-      setPageSelected(respuestaInfo.page);
       setProductosDisplay(response.data.data.data);
-      handleLoading()
-      return response.data;
-
     } catch (error) {
-      handleLoading();
-      console.error(error.message ? error.message : 'Ha habido un error al obtener los productos');
-      return error;
-    } finally {
-      handleLoading();
+      console.error(error.message || 'Error al obtener los productos');
     }
-  }
+  };
 
   // Función para obtener las categorías
   const getCategories = async () => {
     try {
-      handleLoading()
       const response = await axios.get(`https://${host}/api/getCategories`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
       setCategorias(response.data.data);
-      handleLoading()
       return response.data;
     } catch (error) {
       console.error(error.message ? error.message : 'Ha habido un error al obtener las categorías');
-      handleLoading();
       return error;
-    } finally {
-      handleLoading();
     }
   }
 
   // Función para obtener productos por categoría
   const getProductosByCategory = async (categoryId, page = 1) => {
     try {
-      handleLoading()
       const params = new URLSearchParams({
         categoryId,
         perPage: cantPerPage, // O puedes establecer otro valor
@@ -137,8 +115,6 @@ export const ProductosProvider = ({ children }) => {
       setProductosDisplay(response.data.data.data); // Actualiza el estado con los productos obtenidos
       setTotalPages(response.data.data.lastPage); // Actualiza las páginas totales
       setTotal(response.data.data.total); // Actualiza el total de productos
-      setPageSelected(response.data.data.page); // Actualiza la página seleccionada
-      handleLoading()
       return response.data;
 
     } catch (error) {
@@ -147,20 +123,32 @@ export const ProductosProvider = ({ children }) => {
     }
   }
 
-  const buscarPorPalabrasClave = async (params) => {
+  const buscarPorPalabrasClave = async (palabraBusqueda) => {
     try {
-      handleLoading()
       // Comienza construyendo la URL base
-      let url = `https://${host}/api/search?query=${params}`;
-      // Agregar otros parámetros de búsqueda
+      const palabraBuscada = palabraBusqueda || searchParams.get('query');
+      // Verifica que haya una palabra de búsqueda
+      if (!palabraBuscada) {
+        console.warn('No hay palabra de búsqueda.');
+        return;
+      }
+
+      let url = `https://${host}/api/search?query=${palabraBuscada}`;
       const parametros = [];
+
+      // Agregar otros parámetros de búsqueda
+      const cantPerPage = searchParams.get('cantPerPage') || 20;
+      const page = searchParams.get('page') || 1;
+
       if (cantPerPage) parametros.push(`perPage=${cantPerPage}`);
-      if (pageSelected) parametros.push(`page=${pageSelected}`);
+      if (page) parametros.push(`page=${page}`);
 
       // Si hay parámetros adicionales, se añaden a la URL
       if (parametros.length > 0) {
         url += `&${parametros.join('&')}`; // Cambiar '?' por '&' para añadir parámetros adicionales
       }
+
+      console.log(url);
 
       // Realizar la solicitud
       const response = await axios.get(url, {
@@ -170,31 +158,34 @@ export const ProductosProvider = ({ children }) => {
       });
 
       // Procesar la respuesta
-      handleLoading()
       const respuestaInfo = response.data.data;
-      // Actualizar los estados según la respuesta
+
+      console.log(respuestaInfo);
       setTotalPages(respuestaInfo.lastPage);
-      setCantPerPage(respuestaInfo.perPage);
       setTotal(respuestaInfo.total);
-      setPageSelected(respuestaInfo.page);
-      setProductosDisplay(respuestaInfo.data); // Asegúrate de acceder correctamente a los datos
+      setProductosDisplay(respuestaInfo.data);
 
       return response.data;
     } catch (error) {
-      console.error(error);
-      return error;
+      console.error('Error al buscar productos:', error);
+      // Puedes mostrar un mensaje de error al usuario aquí, si lo deseas.
+      return null; // Devuelve null o maneja el error como prefieras
     }
   };
+
 
   // Llamar a las funciones al montar el componente
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         if (searchParams) { await buscarPorPalabrasClave(searchParams) }
         await getProductos();
         await getCategories();
       } catch (error) {
         return error
+      }finally{
+        setLoading(false)
       }
     }
     fetchData();
@@ -206,10 +197,9 @@ export const ProductosProvider = ({ children }) => {
       getCategories, categorias,
       getProductosByCategory, // Añade esta línea para exponer la función
       errorMsg, total, totalPages,
-      pageSelected, setPageSelected,
-      cantPerPage, setCantPerPage,
       buscarPorPalabrasClave, getOfertas,
-      getProductosDetalles
+      getProductosDetalles,
+      setSearchParams, searchParams, pageSelected,cantPerPage
     }}>
       {children}
     </ProductosContext.Provider>

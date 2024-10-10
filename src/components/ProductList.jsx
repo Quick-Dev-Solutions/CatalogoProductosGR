@@ -1,55 +1,72 @@
 import { useContext, useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ProductosContext } from '../contexts/ProductosContext';
 import { AuthContext } from '../auth/AuthContext';
 import { ProductContainer } from './ProductContainer';
 import { CategoriesList } from './CategoriesList';
 
 export const ProductList = () => {
-    const { loading, error } = useContext(AuthContext);
-    const { productosDisplay, total, pageSelected, cantPerPage, totalPages, setPageSelected, setCantPerPage, getProductosByCategory, getProductos, buscarPorPalabrasClave, getOfertas, categorias } = useContext(ProductosContext);
-    const { categoryId, searchParams } = useParams();
-    const [categoriaEn, setCategoriaEn] = useState(null)
-    const location = useLocation()
-    let url = location.pathname
+    const { loading, error, setLoading } = useContext(AuthContext);
+    const { productosDisplay, total, totalPages, getProductosByCategory, getProductos, buscarPorPalabrasClave, getOfertas, categorias, searchParams, setSearchParams, pageSelected, cantPerPage, query } = useContext(ProductosContext);
 
+    const { categoryId } = useParams();
+    const [categoriaEn, setCategoriaEn] = useState(null)
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                
-                setCategoriaEn(null)
+                setCategoriaEn(null);
                 if (categoryId) {
                     // Si hay una categoría seleccionada, obtenemos los productos por categoría
                     await getProductosByCategory(categoryId, 1);
-                    setCategoriaEn(categorias.filter(categoria =>categoria.id == categoryId)[0])
-                } else if (searchParams) {
+                    if (categorias) {
+                        setCategoriaEn(categorias.find(categoria => categoria.id === categoryId));
+                    }
+                } else if (searchParams.get('query')) {
                     // Si hay una búsqueda, obtenemos los productos filtrados por búsqueda
-                    await buscarPorPalabrasClave(searchParams);
-                } else if (url === '/ofertas') {
-                    // Si estamos en la página de ofertas, obtenemos las ofertas
-                    await getOfertas();
+                    await buscarPorPalabrasClave(searchParams.get('query'));
                 } else {
                     // Si no hay categoría, búsqueda o estamos en ofertas, obtenemos todos los productos
                     await getProductos();
                 }
             } catch (error) {
                 console.error("Error al obtener productos:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProductos();
-    }, [categoryId, searchParams,cantPerPage, url]); // Asegúrate de incluir 'searchParams' y 'url' en las dependencias
+    }, [searchParams, categoryId]); // Eliminé la dependencia 'url'
 
 
     const handlePageChange = (page) => {
+        console.log(page);
         if (page >= 1 && page <= totalPages) {
-            setPageSelected(page);
+            setSearchParams({query, page: page, cantPerPage })
         }
     };
-
+    
     const handleCantidadChange = (event) => {
-        setCantPerPage(event.target.value);
+        const newCantPerPage = event.target.value;
+    
+        // Obtener los parámetros actuales
+        const currentParams = Object.fromEntries(searchParams.entries());
+    
+        // Actualizar solo el valor de cantPerPage
+        const updatedParams = {
+            ...currentParams,
+            cantPerPage: newCantPerPage || undefined, // Si no hay valor, se pone undefined
+        };
+    
+        // Si no hay valor en query, no se añade
+        if (!updatedParams.query) {
+            delete updatedParams.query; // Elimina el parámetro query si está vacío
+        }
+    
+        // Actualiza los searchParams
+        setSearchParams(updatedParams);
     };
+    
     const generarPaginas = () => {
         const paginas = [];
         paginas.push(1); // Primera página
@@ -65,25 +82,25 @@ export const ProductList = () => {
 
     if (productosDisplay && !loading) {
         return (
-            <div className="main m-0 flex flex-row justify-between w-64 md:w-[80vw] md:mx-auto">
-                <meta name="description" 
-                content={`Encontrá ${location.pathname=='/ofertas'? 'nuestras ofertas en GR Llaves, comprá la mejor calidad al mejor precio. Tu seguridad, en nuestras manos..': 'nuestra variedad de productos de GR Llaves, representantes de SOMET, BBS Motion, compras mayoristas y más. Tu seguridad, en nuestras manos...'}`} 
+            <div className="main m-0 flex flex-row w-64 md:w-full md:mt-4 md:mx-4">
+                <meta name="description"
+                    content={`Encontrá ${location.pathname == '/ofertas' ? 'nuestras ofertas en GR Llaves, comprá la mejor calidad al mejor precio. Tu seguridad, en nuestras manos..' : 'nuestra variedad de productos de GR Llaves, representantes de SOMET, BBS Motion, compras mayoristas y más. Tu seguridad, en nuestras manos...'}`}
                 />
                 <div className="categories w-fit">
-                    {url != '/ofertas' && <CategoriesList />}
+                    {<CategoriesList />}
                 </div>
                 <div className="body flex flex-col items-center w-full">
                     {categoriaEn && <div className="font-bold text-2xl uppercase">CATEGORÍA {categoriaEn.nombre}</div>}
                     <div className="grid grid-flow-row gap-x-32 md:gap-x-24  grid-cols-2 md:grid-cols-4 justify-center items-center">
-                        {productosDisplay.map(producto => (
-                            <ProductContainer key={producto.id} product={producto} />
+                        {productosDisplay.map((producto, index) => (
+                            <ProductContainer key={index} product={producto} />
                         ))}
                     </div>
-                    {productosDisplay.length > 0 && url != '/ofertas' && <div className="my-4">
+                    {productosDisplay.length > 0 && <div className="my-4">
                         <label htmlFor="cantidadPorPag" className="mr-2">Productos por página:</label>
                         <select
                             id="cantidadPorPag"
-                            value={cantPerPage}
+                            value={cantPerPage[0]}
                             onChange={handleCantidadChange}
                             className="p-2 border"
                         >
@@ -93,7 +110,7 @@ export const ProductList = () => {
                         </select>
                     </div>}
 
-                    {productosDisplay.length > 0 && url != '/ofertas' && <div className="paginacion my-4 flex flex-row justify-between w-full">
+                    {productosDisplay.length > 0 && <div className="paginacion my-4 flex flex-row justify-between w-full">
                         <p>{total} resultados</p>
                         <nav aria-label="paginacion-label">
                             <ul className="inline-flex -space-x-px text-sm">
