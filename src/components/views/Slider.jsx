@@ -24,9 +24,10 @@ export const Slider = () => {
 
     return (
         <div className="relative
-         bg-gradient-to-b from-orange-400 md:mx-auto to-white w-[80vw] sm:w-full
+         bg-gradient-to-b from-orange-400 to-white sm:w-full
+         w-[100vw]
          ">
-            <div className="overflow-hidden relative h-[250px] w-[500px] mx-auto">
+            <div className="overflow-hidden relative lg:h-[250px] lg:w-[500px] mx-auto">
                 <div
                     className="flex transition-transform ease-out duration-500"
                     style={{ transform: `translateX(-${currentIndex * 100}%)` }}

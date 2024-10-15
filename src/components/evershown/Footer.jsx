@@ -4,7 +4,7 @@ import Mail from '../../assets/mail.svg'
 
 export const Footer = () => {
     return (
-      <footer className="bg-slate-600 text-white p-4">
+      <footer className="bg-slate-600 text-white p-4 ">
         <div className="container mx-auto flex justify-between items-center">
           {/* Sección de información */}
           <div className="w-64">

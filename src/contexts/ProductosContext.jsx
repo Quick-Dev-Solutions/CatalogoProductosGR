@@ -18,6 +18,7 @@ export const ProductosProvider = ({ children }) => {
   const [total, setTotal] = useState(null);
   const pageSelected = searchParams.get('page') || 1
   const cantPerPage = useState(searchParams.get('cantPerPage')? searchParams.get('cantPerPage') : 20)
+  let isOfertas = searchParams.get('ofertas') || false
   const getProductosDetalles = async (idProducto) => {
     try {
       const response = await axios.get(`https://${host}/api/getProductById/${idProducto}`, {
@@ -27,8 +28,7 @@ export const ProductosProvider = ({ children }) => {
       });
       return response.data; // Devolver los datos correctamente
     } catch (error) {
-      console.error(error);
-      return null; // Puedes manejar el error devolviendo un valor por defecto o null
+      throw new Error({message:'Error al buscar productos:', error})
     }
   };
 
@@ -47,8 +47,7 @@ export const ProductosProvider = ({ children }) => {
       setProductosDisplay(respuestaInfo);
       return response.data;
     } catch (error) {
-      console.error(error.message ? error.message : 'Ha habido un error al obtener los productos');
-      return error;
+      throw new Error({message:'Error al buscar productos:', error})
     }
   }
 
@@ -76,7 +75,7 @@ export const ProductosProvider = ({ children }) => {
       setTotal(respuestaInfo.total);
       setProductosDisplay(response.data.data.data);
     } catch (error) {
-      console.error(error.message || 'Error al obtener los productos');
+      throw new Error({message:'Error al buscar productos:', error})
     }
   };
 
@@ -91,35 +90,39 @@ export const ProductosProvider = ({ children }) => {
       setCategorias(response.data.data);
       return response.data;
     } catch (error) {
-      console.error(error.message ? error.message : 'Ha habido un error al obtener las categorías');
-      return error;
+      throw new Error({message:'Error al buscar productos:', error})
     }
   }
 
   // Función para obtener productos por categoría
   const getProductosByCategory = async (categoryId, page = 1) => {
     try {
+      // setLoading(true)
+      setProductosDisplay([])
       const params = new URLSearchParams({
         categoryId,
         perPage: cantPerPage, // O puedes establecer otro valor
         page,
       });
-
+      
       const url = `https://${host}/api/getProductsByCategory?${params.toString()}`;
       const response = await axios.get(url, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
       });
-
+      
       setProductosDisplay(response.data.data.data); // Actualiza el estado con los productos obtenidos
       setTotalPages(response.data.data.lastPage); // Actualiza las páginas totales
       setTotal(response.data.data.total); // Actualiza el total de productos
+      setLoading(false)
       return response.data;
 
     } catch (error) {
       setError(error.message ? error.message : 'Ha habido un error al obtener los productos por categoría');
       return error;
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -148,7 +151,6 @@ export const ProductosProvider = ({ children }) => {
         url += `&${parametros.join('&')}`; // Cambiar '?' por '&' para añadir parámetros adicionales
       }
 
-      console.log(url);
 
       // Realizar la solicitud
       const response = await axios.get(url, {
@@ -160,16 +162,13 @@ export const ProductosProvider = ({ children }) => {
       // Procesar la respuesta
       const respuestaInfo = response.data.data;
 
-      console.log(respuestaInfo);
       setTotalPages(respuestaInfo.lastPage);
       setTotal(respuestaInfo.total);
       setProductosDisplay(respuestaInfo.data);
 
       return response.data;
     } catch (error) {
-      console.error('Error al buscar productos:', error);
-      // Puedes mostrar un mensaje de error al usuario aquí, si lo deseas.
-      return null; // Devuelve null o maneja el error como prefieras
+      throw new Error({message:'Error al buscar productos:', error})
     }
   };
 
@@ -179,6 +178,8 @@ export const ProductosProvider = ({ children }) => {
     const fetchData = async () => {
       setLoading(true)
       try {
+        setLoading(true)
+        if(isOfertas) {await getOfertas()}
         if (searchParams) { await buscarPorPalabrasClave(searchParams) }
         await getProductos();
         await getCategories();

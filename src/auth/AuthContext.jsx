@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
     setLoading(true); // Solo aquí
     try {
       const response = await axios.post(`https://${host}/login`, { mail, password });
-      console.log(response);
       if (response.data) {
         const { token } = response.data;
         Cookies.set('token', token, { expires: 7 });

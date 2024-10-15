@@ -17,6 +17,7 @@ import { Inicio } from "./pages/Inicio";
 import { ProductList } from "./components/ProductList";
 import { ProductoDetalle } from "./components/ProductoDetalle";
 import { Footer } from "./components/evershown/Footer";
+import { About } from "./pages/About";
 
 
 function App() {
@@ -24,11 +25,9 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <ProductosProvider>
-          <div className="app-container ">
-            {/* <ScrollToTop/> */}
+          <div className="app-container">
             <Header />
             <div className="main-content">
-
               <Routes>
                 <Route
                   path="/login"
@@ -48,7 +47,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/ofertas"
+                  path="/productos/:ofertas"
                   element={
                     <PublicRoute>
                       <ProductList />
@@ -84,6 +83,14 @@ function App() {
                   element={
                     <PublicRoute>
                       <ProductList />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/nosotros"
+                  element={
+                    <PublicRoute>
+                      <About />
                     </PublicRoute>
                   }
                 />

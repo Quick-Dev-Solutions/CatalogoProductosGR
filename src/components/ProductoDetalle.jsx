@@ -18,7 +18,7 @@ export const ProductoDetalle = () => {
 
     if (!producto) return;
     return (
-        <div className="bg-white flex flex-row w-full size-full justify-center items-center my-2 h-[70vh] gap-24">
+        <div className="bg-white flex md:flex-row flex-col w-full size-full  justify-center items-center my-2 md:h-[70vh] gap-24">
             <div className="galeria max-w-[400px]"> {/* Ajusta el contenedor de la imagen */}
                 <SliderProducto images={producto.images ? producto.images : []} />
             </div>
