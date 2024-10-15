@@ -39,32 +39,34 @@ Este módulo está diseñado para gestionar el acceso al sistema y controlar las
   - **Autenticación**: Verifica las credenciales proporcionadas contra la base de datos para permitir el acceso al sistema.
 - **Recuperación de Contraseña**: Permite a los usuarios recuperar o restablecer su contraseña mediante un proceso de verificación de identidad (como un enlace enviado al correo electrónico).
 
-#### 3. Gestión de Sesiones:
-- **Monitoreo de Sesiones Activas**: Permite ver qué usuarios están actualmente conectados al sistema.
-- **Expiración de Sesión**: Implementa políticas de expiración de sesión para mejorar la seguridad, como el cierre automático de sesión después de un período de inactividad.
-
-#### 4. Registro de Actividades:
-- **Auditoría**: Registra todas las acciones realizadas por cada usuario (por ejemplo, cambios en datos, accesos, etc.), lo que permite auditar y rastrear las actividades en el sistema.
-- **Reportes de Actividad**: Genera reportes sobre las actividades de los empleados, que pueden ser utilizados para análisis de uso y resolución de problemas.
-
-#### 5. Seguridad y Acceso:
-- **Autenticación Multifactor (MFA) (Opcional)**: Añade una capa adicional de seguridad requiriendo un segundo factor de autenticación, como un código enviado al móvil del usuario.
-- **Encriptación de Contraseñas**: Las contraseñas se almacenan de manera segura utilizando técnicas de encriptación para proteger los datos de acceso.
-
-#### 6. Configuración de Permisos:
-- **Control de Acceso Basado en Roles (RBAC)**: Configura permisos específicos para diferentes roles, determinando qué funcionalidades y datos están disponibles para cada tipo de usuario.
-- **Permisos Personalizados**: Permite definir permisos específicos a nivel de funcionalidad o de datos, ajustados a las necesidades de la empresa.
-
-## Cronograma del Proyecto
-
-### Posibilidad de Extensión
-El sistema está diseñado para ser flexible y extensible. Se pueden agregar módulos adicionales o funcionalidades futuras, como:
-- **Gestión de Inventario**: Control del stock y gestión de productos.
-- **Análisis de Ventas**: Reportes avanzados y análisis de datos.
-- **Automatización Adicional**: Integraciones con otros sistemas y servicios.
-- **Funcionalidades Personalizadas**: Desarrollo de características específicas según las necesidades del cliente.
-
-Estas implementaciones no están incluidas en el presupuesto presentado.
-
+#### 3. CRUD de productos y ofertas:
+- **Modificación de ofertas**: Permite al administrador modificar las ofertas disponibles.
+- **Productos**: Permite al administrador, crear, editar, eliminar o ver los productos disponibles.
 
 #### Proyecto implementado con el empaquetador Vite 
+#### Tecnologías Utilizadas:
+- React.js (Framework principal de UI)
+- Tailwind CSS (Librería para estilos)
+- React-Router-Dom (Librería para la navegación entre páginas sin perder los estados y obtener los params)
+- Axios (para peticiones a la API)
+- JS-cookie (para el manejo de autenticación, no realizado todavía.)
+
+#### Estructura del proyecto
+- AuthProvider (Proveedor para el manejo de las cargas mientras peticiones y autenticación de usuarios.)
+- ProductosProvider (Proveedor de funciones para peticiones a la API, donde se encuentran la mayoría de funciones.)
+- Rutas públicas (rutas de acceso público donde cualquier usuario que no esté logueado puede ingresar.)
+- Rutas privadas (rutas de acceso privado para el personal administrativo, no realizadas todavía)
+- **Vistas**:
+  - Vista de carga adaptada a la paleta de colores de la empresa.
+  - Slider de ofertas para los productos.
+  - Scroll to Top, componente que ayuda a la mejor experiencia de usuario.
+
+- **Componentes**:
+  - Siempre mostrados: El header y el footer siempre estarán a la vista del usuario.
+  - ProductContainer, contiene la vista de un producto.
+  - Categories List, contiene la lista de categoría que será mostrada en ProductList.
+  - ProductList, contiene la lista de productos según los parámetros establecidos.
+
+- **Otras páginas**:
+  - Inicio: página donde el usuario verá las principales ofertas, un slider de las mismas y todas las categorías que ofrece la empresa.
+  - About: ofrece una descripción de lo que es la empresa.
