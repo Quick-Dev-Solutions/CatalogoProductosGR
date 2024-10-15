@@ -43,15 +43,15 @@ Este módulo está diseñado para gestionar el acceso al sistema y controlar las
 - **Modificación de ofertas**: Permite al administrador modificar las ofertas disponibles.
 - **Productos**: Permite al administrador, crear, editar, eliminar o ver los productos disponibles.
 
-#### Proyecto implementado con el empaquetador Vite 
-#### Tecnologías Utilizadas:
+## Proyecto implementado con el empaquetador Vite 
+### Tecnologías Utilizadas:
 - React.js (Framework principal de UI)
 - Tailwind CSS (Librería para estilos)
 - React-Router-Dom (Librería para la navegación entre páginas sin perder los estados y obtener los params)
 - Axios (para peticiones a la API)
 - JS-cookie (para el manejo de autenticación, no realizado todavía.)
 
-#### Estructura del proyecto
+### Estructura del proyecto
 - AuthProvider (Proveedor para el manejo de las cargas mientras peticiones y autenticación de usuarios.)
 - ProductosProvider (Proveedor de funciones para peticiones a la API, donde se encuentran la mayoría de funciones.)
 - Rutas públicas (rutas de acceso público donde cualquier usuario que no esté logueado puede ingresar.)
