@@ -1,5 +1,5 @@
-# Sistema de Catálogo de Productos para GR LLaves
-
+# Sistema de catálogo de productos para empresa de venta mayorista y minorista.
+## Implementado por QuickDevSolutions
 ## Descripción del Proyecto
 
 El sistema web propuesto automatiza el proceso de búsqueda de productos para los clientes, así como la gestión de productos y categorías desde el lado de los empleados. Este sistema permite una gestión eficiente de la vista de productos y mejora la visibilidad de los mismos.
@@ -70,3 +70,11 @@ Este módulo está diseñado para gestionar el acceso al sistema y controlar las
 - **Otras páginas**:
   - Inicio: página donde el usuario verá las principales ofertas, un slider de las mismas y todas las categorías que ofrece la empresa.
   - About: ofrece una descripción de lo que es la empresa.
+
+## Contacto
+
+Si estás interesado en este proyecto o deseas que desarrollemos uno a medida adaptado a tus necesidades, no dudes en ponerte en contacto con nosotros. Estaremos encantados de ayudarte a crear soluciones innovadoras y eficientes.
+
+**Correo electrónico**: [santiagocuevas@quickdevsolution.com](mailto:santiagocuevas@quickdevsolution.com)
+
+¡Esperamos trabajar contigo!
